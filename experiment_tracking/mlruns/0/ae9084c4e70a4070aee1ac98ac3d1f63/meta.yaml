@@ -1,0 +1,15 @@
+artifact_uri: ./mlruns/0/ae9084c4e70a4070aee1ac98ac3d1f63/artifacts
+end_time: 1701656466851
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: ae9084c4e70a4070aee1ac98ac3d1f63
+run_uuid: ae9084c4e70a4070aee1ac98ac3d1f63
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1701656462050
+status: 3
+tags: []
+user_id: shreyajaiswal
