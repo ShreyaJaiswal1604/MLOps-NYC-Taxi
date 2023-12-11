@@ -2,56 +2,72 @@ import os
 import time
 import pickle
 import pandas as pd
-#from google.cloud import storage
 from fastapi import FastAPI, HTTPException, Response, status, Query, Request
 from fastapi.responses import HTMLResponse
 import random
 
+from pydantic import BaseModel
+
+
 categorical = ['PUlocationID', 'DOlocationID']
 numerical = ['trip_distance']
 
-model_path = '/Users/shreyajaiswal/Library/CloudStorage/OneDrive-NortheasternUniversity/Projects/MLOps-NYC-Taxi/experiment_tracking/models/extra_trees_model.pkl'
+model_path = '/Users/shreyajaiswal/Library/CloudStorage/OneDrive-NortheasternUniversity/Projects/MLOps-NYC-Taxi/experiment_tracking/models/extra_trees_model_v1.pkl'
+
+with open(f'{model_path}', 'rb') as f_out:
+    dv,model = pickle.load(f_out)
 
 
-# with open(f"{model_path}", 'rb') as f_in:
-#     dv,lr = pickle.load
 
-# description = """
-# API helps to provide an ML model as a service
+class inputFeatures(BaseModel):
+    pickup_loc: str
+    drop_loc: str 
+    distance: int
 
-# ## Users will be able to:
-#     ***Predict Taxi Ride Duration***
-# """
+def prepare_features(f: inputFeatures):
+    features={}
+    features['PU_DO'] = f'{f.pickup_loc}_{f.drop_loc}'
+    features['trip_distance'] = f.distance
+    return features
 
-# tags_metadata = [{
-#     "name": "time",
-#     "description": "Predicts the mean  duration of ride time between twolocations",
-# },
-# ]
-
-# app = FastAPI( title = "NYC-Predict taxi ride duration",
-#               description=description)
-
+def predict_duration(features):
+    X = dv.transform(features)
+    preds = model.predict(X)
+    return float(preds[0])
 
 app = FastAPI()
 
-@app.get("/anushka")
-async def read_items():
-    return {"message": "Hello World - Piyush"}
+@app.get("/")
+async def read_root():
+    return {"message": "Hello, World!"}
 
-# # Load the trained model from the pickle file
-# with open(f"{model_output_filepath}/extra_trees_model.pkl", "rb") as f:
-#     loaded_model = pickle.load(f)
+@app.post('/predict')
+async def predict(f : inputFeatures ):
+    features = prepare_features(f)
+    predicted_duration = predict_duration(features)
 
-# # Predict on the test set
-# y_test_pred = loaded_model.predict(X_test)
-
-# def predict(location1, location2, distance):
-
+    return {
+        'duration': predicted_duration
+    }
 
 
-@app.post("/shreya")
-async def predict(location1, location2, distance):
-    # your logic
-    result = random.random()
-    return {"message": f"Time est: {result}"}
+
+
+
+# app = FastAPI()
+
+# @app.get("/")
+# async def read_items():
+#     return {"message": "Hello World"}
+
+# @app.post("/predict")
+# async def predict(tp : TripPlan):
+#     """TODO:
+#     1. Load the model bin file
+#     2. transform the input into vectors
+#     3. Use the model to predict the time taken
+#     4. Return the result in a JSON format / Dict
+#     """
+#     return tp
+
+
