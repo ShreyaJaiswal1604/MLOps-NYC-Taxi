@@ -22,7 +22,7 @@ with open(f'{model_path}', 'rb') as f_out:
 class inputFeatures(BaseModel):
     pickup_loc: str
     drop_loc: str 
-    distance: int
+    distance: float
 
 def prepare_features(f: inputFeatures):
     features={}
