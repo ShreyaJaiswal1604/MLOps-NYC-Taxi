@@ -10,8 +10,8 @@ numerical = ['trip_distance']
 model_path = '/Users/shreyajaiswal/Library/CloudStorage/OneDrive-NortheasternUniversity/Projects/MLOps-NYC-Taxi/experiment_tracking/models/extra_trees_model_v1.pkl'
 
 
-with open(f"{model_path}", 'rb') as f_in:
-    dv,model = pickle.load(f_in)
+with open(f'{model_path}', 'rb') as f_out:
+    dv,model = pickle.load(f_out)
 
 
 def prepare_features(ride):
