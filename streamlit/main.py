@@ -1,5 +1,14 @@
 import streamlit as st
 import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+#print(f"API KEY VAR = {os.getenv('API_KEY')}")
+
+# Use environment variables or default values
+FASTAPI_URL = os.getenv("API_URL", "http://localhost:8080")
 
 st.title('NYC-yellow-taxi-duration-prediction')
 
@@ -21,7 +30,7 @@ with st.form("my_form"):
 
         # Make API call only if all inputs are provided
         if loc1 and loc2 and distance is not None:
-            api_url = "http://127.0.0.1:8000/predict"
+            api_url = f"{FASTAPI_URL}/predict"
             payload = {
                 "pickup_loc": loc1,
                 "drop_loc": loc2,

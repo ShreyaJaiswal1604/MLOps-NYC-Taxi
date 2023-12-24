@@ -1,0 +1,19 @@
+version: '3'
+services:
+  streamlit:
+    container_name: streamlit # Container Name during running rather than a random name
+    build:
+      context: ./streamlit  # Dir name from which the image is to built, by default it looks for a file called Dockerfile under that dir
+    ports:
+      - "8501:8501" # Port on which the service is started, Left port represents the port on the localhost where as the port on the right imples the port within the container on which the service is exposed. DONOT change the right port, always change the left port. Incase you have to change the right port, do in within the Dockerfile as well
+    environment:
+      - API_URL=http://fastapi:8080   # Use environment var's to pass dynamic values which can change based on the system deployed, like DEV / UAT / PROD. All secrets must be passed as env variables
+
+  fastapi:
+    ## Add here, things which will differ are container_name, context, port and i guess no env variables
+    container_name: fastapi
+    build:
+      context: ./fastapi
+      # dockerfile: Dockerfile_fastapi
+    ports:
+      - "8080:8080"
